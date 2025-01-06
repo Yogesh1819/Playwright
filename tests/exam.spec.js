@@ -12,6 +12,8 @@ test('Test', async({page})=>
     const Obj1=new Practitioner(page);
    await Obj1.CreatePrcatitioner('Quincy','Benson','7387225564','quincybenson@arthtechltd.com');
    await page.waitForTimeout(3000);
+
+   
    await Obj1.DeletePractitioner('Quincy');
 
     await page.pause();
