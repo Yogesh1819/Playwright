@@ -1,13 +1,13 @@
 const{test,expect}=require('@playwright/test')
+const { LoginPage } = require('../Pages/LoginPage')
 
 test('Practice Test Case', async({page})=>
 {
 
-    await page.goto('https://testautomationpractice.blogspot.com/')
+    const Obj=new LoginPage(page)
+    await Obj.goto()
+    await Obj.loginapplication('test1hccadmin1@arthtechltd.com','Pass@123')
 
-    const Title=await page.locator('//h1[@class="title"]').textContent();
-
-    await expect(Title).toContain('Automation Testing Practice')
-    console.log('Test Passed Successfully')
+    await Obj.LockMenu();
 }
 )

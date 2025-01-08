@@ -15,10 +15,19 @@ class Responders
         this.Contact='//input[@name="contactNumber"]'
         this.Email='//input[@name="email"]'
         this.ResponderType='(//input[@name="responderGroup"])[1]'
-        this.ResponderRole='(//input[@name="responderRole"])[1]'
+        this.ResponderRole='(//input[@name="responderRole"])[2]'
         this.Notification='//input[@name="notificationNotice.sms"]'
+        this.Save='//button[@name="save"]'
+        this.CreatedMsg="//div[text()='Responder is created successfully.']"
+        this.Edit='//button[@name="pencilIcon"]'
+        this.UpdatedMsg="//div[text()='Responder is updated successfully.']"
+        this.search='//input[@name="search"]'
+        this.DeleteResponder='//button[@name="deleteButton"]'
+        this.Yes='//button[@name="yes"]'
+        this.DeletedMsg="//div[text()='Responder deleted successfully.']"
     }
 
+    // Create The Responder
     async CreateResponder(FirstName,LastName,ContactNumber,ResponderEmail)
     {
         await this.page.locator(this.Account).click();
@@ -30,17 +39,80 @@ class Responders
          await this.page.locator(this.Lname).fill(LastName)
          await this.page.locator(this.Contact).fill(ContactNumber)
          await this.page.locator(this.Email).fill(ResponderEmail)
-      //  const Type= await this.page.locator(this.ResponderType);
-         if(await this.page.locator(this.ResponderType).isChecked())
+   
+
+        // Check if ResponderType is selected
+        if (await this.page.locator(this.ResponderType).isChecked()) 
          {
-            await expect(await this.page.locator(this.ResponderType)).toBeTruthy()
-            
+         await expect(this.page.locator(this.ResponderType)).toBeChecked();
          }
          else 
          {
-            await expect(await this.page.locator(this.ResponderType)).toBeFalsy()
+         await expect(this.page.locator(this.ResponderType)).not.toBeChecked();
          }
-         console.log('Test script Done Successfully')
+
+     // Check if ResponderRole is selected
+       if (await this.page.locator(this.ResponderRole).isChecked())
+       {
+         await expect(this.page.locator(this.ResponderRole)).toBeChecked();
+       } 
+       else 
+       {
+         console.log('ResponderRole checkbox is not selected.');
+         await expect(this.page.locator(this.ResponderRole)).not.toBeChecked();
+       }
+
+       // Check if SMS Notification checkbox selected
+
+       if(await this.page.locator(this.Notification).isChecked())
+       {
+         await expect(await this.page.locator(this.Notification)).toBeChecked();
+         await this.page.locator(this.Notification).uncheck();
+         console.log('SMS is unselected')
+       }
+       else
+       {
+         console.log("SMS check box is not selected")
+         await expect(await this.page.locator(this.Notification)).not.toBeChecked()
+       }
+
+       await this.page.locator(this.Save).click();
+       const Message=await this.page.locator(this.CreatedMsg).textContent();
+       expect(Message).toContain('Responder is created successfully.')
+
     }
+
+    async EditResponder(SFirstName,FirstName,LastName)
+     {
+      await this.page.locator(this.search).fill(SFirstName)
+      await this.page.locator(this.Edit).click()
+      await this.page.locator(this.Fname).fill(FirstName)
+      await this.page.locator(this.Lname).fill(LastName)
+      await this.page.locator(this.Save).click()
+      const Message=await this.page.locator(this.UpdatedMsg).textContent()
+      await expect(Message).toContain('Responder is updated successfully.')
+      /*
+      await this.page.locator(this.search).fill(SSFirstName)
+      await this.page.locator(this.Edit).click()
+      await this.page.locator(this.Fname).fill(RFirstName)
+      await this.page.locator(this.Lname).fill(RLastName)
+      await this.page.locator(this.Save).click()
+      const Message2=await this.page.locator(this.UpdatedMsg).textContent()
+      await expect(Message2).toContain('Responder is updated successfully.')
+   */
+
+     }
+     
+
+    // Delete the Created responder
+    async DeleteRespond(FirstName)
+    {
+      await this.page.locator(this.search).fill(FirstName)
+      await this.page.locator(this.DeleteResponder).click()
+      await this.page.locator(this.Yes).click()
+      const Message=await this.page.locator(this.DeletedMsg).textContent()
+      await expect(Message).toContain('Responder deleted successfully.')
+    }
+   
 
 }
