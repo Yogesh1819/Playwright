@@ -15,14 +15,19 @@ class Responders
         this.Contact='//input[@name="contactNumber"]'
         this.Email='//input[@name="email"]'
         this.ResponderType='(//input[@name="responderGroup"])[1]'
-        this.ResponderRole='(//input[@name="responderRole"])[2]'
+        this.ResponderRole='(//input[@name="responderRole"])[1]'
+        this.ResponderRole2='(//input[@name="responderRole"])[2]'
+        this.AssignLeadResponder='//input[@name="assignedResponder"]'
+        this.ParentResponderList='//li[@class="MuiAutocomplete-option"]'
         this.Notification='//input[@name="notificationNotice.sms"]'
         this.Save='//button[@name="save"]'
         this.CreatedMsg="//div[text()='Responder is created successfully.']"
         this.Edit='//button[@name="pencilIcon"]'
         this.UpdatedMsg="//div[text()='Responder is updated successfully.']"
         this.search='//input[@name="search"]'
+        this.ExpandArrow='//div[@class="MuiBox-root css-1n9wuna"]'
         this.DeleteResponder='//button[@name="deleteButton"]'
+        this.DeleteBtn2='(//button[@name="deleteButton"])[2]'
         this.Yes='//button[@name="yes"]'
         this.DeletedMsg="//div[text()='Responder deleted successfully.']"
     }
@@ -82,6 +87,54 @@ class Responders
 
     }
 
+
+    async CreateChildEmgResponder(FirstName,LastName,ContactNumber,ResponderEmail)
+    {
+      const ParentResponder='Dennis Smithers'
+      await this.page.locator(this.Account).click()
+      await this.page.locator(this.Responder).click()
+       await this.page.locator(this.NewBtn).click()
+       await this.page.locator(this.Fname).fill(FirstName)
+       await this.page.locator(this.Lname).fill(LastName)
+       await this.page.locator(this.Contact).fill(ContactNumber)
+       await this.page.locator(this.Email).fill(ResponderEmail)
+
+         // Check if ResponderType is selected
+       if(await this.page.locator(this.ResponderType).isChecked())
+       {
+         expect(await this.page.locator(this.ResponderType)).toBeChecked()
+       }
+       else
+       {
+        expect(await this.page.locator(this.ResponderType)).not.toBeChecked()
+       }
+       
+       // Check if ResponderRole is selected
+       if(await this.page.locator(this.ResponderRole).isChecked())
+       {
+          await this.page.locator(this.ResponderRole2).click()
+       }
+    
+       await this.page.locator(this.AssignLeadResponder).click()
+       await this.page.locator(this.ParentResponderList).filter({hasText:ParentResponder}).click()
+
+       if (await this.page.locator(this.Notification).isChecked())
+       {
+          expect(await this.page.locator(this.Notification)).toBeTruthy()
+       }
+       else
+       {
+        await this.page.locator(this.Notification).click()
+       }
+
+       await this.page.locator(this.Save).click()
+       const Message=await this.page.locator(this.CreatedMsg).textContent()
+       expect(Message).toContain('Responder is created successfully.')
+
+       this.page.waitForTimeout(5000)
+       
+    }
+
     async EditResponder(SFirstName,FirstName,LastName)
      {
       await this.page.locator(this.search).fill(SFirstName)
@@ -103,7 +156,15 @@ class Responders
 
      }
      
-
+     async DeleteChildResponder(FirstName)
+     {
+      await this.page.locator(this.search).fill(FirstName)
+      await this.page.locator(this.ExpandArrow).click()
+      await this.page.locator(this.DeleteBtn2).click()
+      await this.page.locator(this.Yes).click()
+      const Message=await this.page.locator(this.DeletedMsg).textContent()
+     expect(Message).toContain('Responder deleted successfully.')
+     }
     // Delete the Created responder
     async DeleteRespond(FirstName)
     {

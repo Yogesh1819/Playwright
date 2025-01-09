@@ -11,15 +11,22 @@ test('Execute Test', async({page})=>
     await Obj1.LockMenu()
     const Obj=new Responders(page)
 
-    await Obj.CreateResponder('Dennis', 'Smithers','7586326121','dennissmithers@arthtechltd.com')
-    await page.waitForTimeout(5000)
-    console.log('Responder Account Created Successfully')
-    await Obj.EditResponder('Dennis','Test11','Emergency11')
-    await page.waitForTimeout(5000)
-    console.log('Responder Account Edited Successfully')
+ //   await Obj.CreateResponder('Dennis', 'Smithers','7586326121','dennissmithers@arthtechltd.com')
+   // await page.waitForTimeout(5000)
+   // console.log('Responder Account Created Successfully')
+   // await page.waitForTimeout(5000)
+    await Obj.CreateChildEmgResponder('William','Quentin','7586326121','williamquentin@arthtechltd.com')
+    await Obj.DeleteChildResponder('Dennis')
 
-    await Obj.DeleteRespond('Test11')
+
+   // await Obj.EditResponder('Dennis','Test11','Emergency11')
+   // await page.waitForTimeout(5000)
+   // console.log('Responder Account Edited Successfully')
+
+   // await Obj.DeleteRespond('Test11')
     await page.pause();
-    await page.waitForTimeout(5000)
+   // await page.waitForTimeout(5000)
     console.log('Responder Account Deleted Successfully')
+
+    
 })
