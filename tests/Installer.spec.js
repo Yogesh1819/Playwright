@@ -11,8 +11,12 @@ test('Installer Test Script', async({page})=>
     await AB.LockMenu()
 
     const Obj=new Installers(page)
-    await Obj.CreateParentInstaller('Jacob','Johns','7586326221','jacobjohns@arthtechltd.com')
-    await page.waitForTimeout(5000)
-    await Obj.DeleteInstaller('Jacob')
+    // Create Parent Installer
+ //   await Obj.CreateParentInstaller('Jacob','Johns','7586326221','jacobjohns@arthtechltd.com')
+  //  await page.waitForTimeout(5000)
+    // Create Child Installer
+    await Obj.CreateChildInstaller('Jacob','Johns','7586326221','jacobjohns@arthtechltd.com')
+    // Delete Installer
+   // await Obj.DeleteInstaller('Jacob')
     await page.pause()
 })

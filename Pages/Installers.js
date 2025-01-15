@@ -16,7 +16,9 @@ class Installers
     this.Contact='//input[@name="contactNumber"]'
     this.email='//input[@name="email"]'
     this.Role='(//input[@name="responderRole"])[1]'
+    this.Role2='(//input[@name="responderRole"])[2]'
     this.Lead='//input[@name="assignedResponder"]'
+    this.ParentList='//li[@class="MuiAutocomplete-option"]'
     this.CreateMsg="//div[text()='Third party installer is created successfully.']"
     this.UpdateMsg='//div[text()="Third party installer is updated successfully."]'
     this.DeleteMsg="//div[text()='Third party installer deleted successfully.']"
@@ -49,6 +51,35 @@ class Installers
     await this.page.locator(this.Save).click()
     const Message=await this.page.locator(this.CreateMsg).textContent();
     expect(Message).toContain('Third party installer is created successfully.')
+  }
+
+  async CreateChildInstaller(FirstName,LastName,ContactNumber,InstallerEmail)
+  {
+    const ParentInstaller='Test1 Installer1'
+     await this.page.locator(this.Account).click()
+     await this.page.locator(this.Installer).click()
+     await this.page.locator(this.NewBtn).click()
+     const Head=await this.page.locator(this.Heading1).textContent()
+     expect(Head).toContain('Add Third party installer')
+     await this.page.locator(this.Fname).fill(FirstName)
+     await this.page.locator(this.Lname).fill(LastName)
+     await this.page.locator(this.Contact).fill(ContactNumber)
+     await this.page.locator(this.email).fill(InstallerEmail)
+
+     if(await this.page.locator(this.Role).isChecked())
+     {
+         await this.page.locator(this.Role2).click()
+     }
+     else
+     {
+      console.log('Supporter Installer Is Not Selected')
+     }
+     await this.page.locator(this.Lead).click()
+     await this.page.locator(this.ParentList).filter({hasText:ParentInstaller}).click()
+     await this.page.locator(this.Save).click()
+     const Message=await this.page.locator(this.CreateMsg).textContent()
+     expect(Message).toContain('Third party installer is created successfully.')
+
   }
 
   async DeleteInstaller(FirstName)
