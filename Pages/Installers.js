@@ -24,9 +24,11 @@ class Installers
     this.DeleteMsg="//div[text()='Third party installer deleted successfully.']"
     this.Edit='//button[@name="pencilIcon"]'
     this.DeleteBtn='//button[@name="deleteButton"]'
+    this.DeleteBtn2='(//button[@name="deleteButton"])[2]'
     this.Yes='//button[@name="yes"]'
     this.Save='//button[@name="save"]'
     this.Search='//input[@name="search"]'
+    this.ExpandArrow='//div[@class="MuiBox-root css-1n9wuna"]'
   }
 
   async CreateParentInstaller(FirstName,LastName,ContactNumber,InstallerEmail)
@@ -49,15 +51,16 @@ class Installers
       console.log('Installer role is not selected')
     }
     await this.page.locator(this.Save).click()
+     this.page.waitForTimeout(2000)
     const Message=await this.page.locator(this.CreateMsg).textContent();
     expect(Message).toContain('Third party installer is created successfully.')
   }
 
   async CreateChildInstaller(FirstName,LastName,ContactNumber,InstallerEmail)
   {
-    const ParentInstaller='Test1 Installer1'
-     await this.page.locator(this.Account).click()
-     await this.page.locator(this.Installer).click()
+    const ParentInstaller='Jacob Johns'
+    // await this.page.locator(this.Account).click()
+    // await this.page.locator(this.Installer).click()
      await this.page.locator(this.NewBtn).click()
      const Head=await this.page.locator(this.Heading1).textContent()
      expect(Head).toContain('Add Third party installer')
@@ -77,16 +80,28 @@ class Installers
      await this.page.locator(this.Lead).click()
      await this.page.locator(this.ParentList).filter({hasText:ParentInstaller}).click()
      await this.page.locator(this.Save).click()
+     this.page.waitForTimeout(2000)
      const Message=await this.page.locator(this.CreateMsg).textContent()
      expect(Message).toContain('Third party installer is created successfully.')
-
   }
+
+    async DeleteChildInstaller(ParentInstallerName)
+    {
+      await this.page.locator(this.Search).fill(ParentInstallerName)
+      await this.page.locator(this.ExpandArrow).click();
+      await this.page.locator(this.DeleteBtn2).click()
+      await this.page.locator(this.Yes).click()
+      this.page.waitForTimeout(2000)
+      const Message=await this.page.locator(this.DeleteMsg).textContent()
+      expect(Message).toContain('Third party installer deleted successfully.')  
+    }
 
   async DeleteInstaller(FirstName)
   {
      await this.page.locator(this.Search).fill(FirstName)
      await this.page.locator(this.DeleteBtn).click()
      await this.page.locator(this.Yes).click()
+     this.page.waitForTimeout(2000)
      const Message=await this.page.locator(this.DeleteMsg).textContent();
      expect(Message).toContain('Third party installer deleted successfully.')
   }
